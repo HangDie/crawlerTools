@@ -1,9 +1,6 @@
 package cn.hd.crawler.core.model;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CrawlerConfig {
 
@@ -12,7 +9,9 @@ public class CrawlerConfig {
     // 需要抓取的网页入口
     private String url = "";
     // 需要持续获取的网页入口规则
-    private List<String> urlsXpaths = new LinkedList<>();
+    private List<String> urlsXpaths = new ArrayList<>();
+    // url contain规则
+    private List<String> urlsContain = new ArrayList<>();
 
     public static CrawlerConfig me() {
         return new CrawlerConfig();
@@ -52,6 +51,20 @@ public class CrawlerConfig {
 
     public CrawlerConfig addUrlXpath(String xpath) {
         this.urlsXpaths.add(xpath);
+        return this;
+    }
+
+    public List<String> getUrlsContain() {
+        return urlsContain;
+    }
+
+    public CrawlerConfig setUrlsContain(List<String> urlsContain) {
+        this.urlsContain = urlsContain;
+        return this;
+    }
+
+    public CrawlerConfig addUrlContain(String urlContain) {
+        this.urlsContain.add(urlContain);
         return this;
     }
 }

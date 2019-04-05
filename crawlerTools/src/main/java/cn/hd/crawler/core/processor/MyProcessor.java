@@ -30,6 +30,10 @@ public class MyProcessor implements PageProcessor {
         for (String xpath : crawlerConfig.getUrlsXpaths()) {
             page.addTargetRequests(page.getHtml().links().regex(xpath).all());
         }
+        // 从页面发现后续的url地址包含条件
+        for(String contain : crawlerConfig.getUrlsContain()) {
+            page.addTargetRequests(page.getHtml().links().all());
+        }
         if(num < 2) {
             return;
         }
