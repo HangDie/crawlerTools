@@ -20,8 +20,7 @@
             <div class="container-fluid">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header bg-light">
-                            规则详情
+                        <div class="card-header bg-light" id="rule-type">
                         </div>
 
                         <div class="card-body">
@@ -46,19 +45,32 @@
         </div>
     </div>
 </div>
-<script src="vendor/jquery/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="vendor/popper.js/popper.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="vendor/chart.js/chart.min.js"></script>
 <script src="js/carbon.js"></script>
 <script src="js/demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="js/common.js"></script>
 </body>
 <script>
     $('#nav').load('./nav.html');
     $('#sidebar').load('./sidebar.html');
+    // 新增规则还是编辑规则
+    var ruleTypeStr = [];
+    ruleTypeStr[true] = "规则详情";
+    ruleTypeStr[false] = "新增规则";
 
     $(document).ready(function () {
+        var ruleId = getQueryString('id');
+        var ruleType = (ruleId != null) ? true : false;
+        // 设置标题
+        $('#rule-type').html(ruleTypeStr[ruleType]);
+        // 编辑规则则去获取规则信息
+        if(ruleType) {
+            
+        }
     });
 </script>
 </html>
