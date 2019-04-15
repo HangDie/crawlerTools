@@ -67,4 +67,5 @@ public class CrawlerConfig {
         this.urlsContain.add(urlContain);
         return this;
     }
+    
 }
