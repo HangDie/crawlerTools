@@ -28,12 +28,130 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="placeholder-input" class="form-control-label">规则名</label>
+                                            <label for="input-ruleName" class="form-control-label">规则名</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input id="placeholder-input" class="form-control">
+                                            <input id="input-ruleName" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="input-detailUrl" class="form-control-label">爬取入口网址</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="input-detailUrl" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="input-detailUrl" class="form-control-label">目标数据规则</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>编号</th>
+                                                    <th>提取结果名</th>
+                                                    <th>提取结果xpath规则</th>
+                                                    <th>删除</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody  id="table-data-xpath">
+                                                <tr v-for="(item,index) in dataXpaths">
+                                                    <td>{{index + 1}}</td>
+                                                    <td class="text-nowrap">{{item.key}}</td>
+                                                    <td>{{item.value}}</td>
+                                                    <td><a href="#" class="btn btn-danger">删除</a></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>新增</td>
+                                                    <td><input class="form-control" type="text" placeholder="请输入提取的结果名" /></td>
+                                                    <td><input class="form-control" type="text" placeholder="请输入提取的结果提取xpath规则" /></td>
+                                                    <td><a href="#">保存</a></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="input-detailUrl" class="form-control-label">持续爬取url规则</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>编号</th>
+                                                    <th>持续捕获的url xpath规则</th>
+                                                    <th>删除</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody  id="table-url-xpath">
+                                                <tr v-for="(item,index) in urlXpaths">
+                                                    <td>{{index + 1}}</td>
+                                                    <td class="text-nowrap">{{item}}</td>
+                                                    <td><a href="#" class="btn btn-danger">删除</a></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>新增</td>
+                                                    <td><input class="form-control" type="text" placeholder="请输入符合该xpath就爬取该网页" /></td>
+                                                    <td><a href="#" class="btn btn-primary">保存</a></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="input-detailUrl" class="form-control-label">持续爬取url包含规则</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>编号</th>
+                                                    <th>持续捕获的url包含规则</th>
+                                                    <th>删除</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody  id="table-url-contain">
+                                                <tr v-for="(item,index) in urlContain">
+                                                    <td>{{index + 1}}</td>
+                                                    <td class="text-nowrap">{{item}}</td>
+                                                    <td><a href="#">删除</a></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>新增</td>
+                                                    <td><input type="text" placeholder="请输入提取的结果名" /></td>
+                                                    <td><input type="text" placeholder="请输入提取的结果提取xpath规则" /></td>
+                                                    <td><a href="#">保存</a></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -68,8 +186,47 @@
         // 设置标题
         $('#rule-type').html(ruleTypeStr[ruleType]);
         // 编辑规则则去获取规则信息
-        if(ruleType) {
-            
+        if (ruleType) {
+            refreshData();
+        }
+
+        function refreshData(){
+            $.ajax({
+                type: 'POST',
+                url: '/crawler/rule/queryRuleById',
+                data: JSON.stringify({
+                    ruleId: ruleId * 1
+                }),
+                contentType: 'application/json;charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    var obj = data.data;
+                    $.each(obj, function (i, v) {
+                        $('#input-' + i).val(v);
+                    });
+                    // 获取的网址数据规则
+                    var dataXpath = JSON.parse(obj.detailDataXpath);
+                    var tableDataXpath = new Vue({
+                        el: '#table-data-xpath',
+                        data: {
+                            dataXpaths: dataXpath
+                        },
+                        // methods : {
+                        //     getRuleInfoUrl : function (id) {
+                        //         return "./rules.html?id=" + id;
+                        //     }
+                        // }
+                    });
+                    // 持续捕获的url规则
+                    var urlXpath = JSON.parse(obj.detailUrlXpath);
+                    var tableUrlXpath = new Vue({
+                        el: '#table-url-xpath',
+                        data: {
+                            urlXpaths: urlXpath
+                        },
+                    });
+                }
+            });
         }
     });
 </script>

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.hd.crawler.dao.RuleMapper" >
-    <sql id="Base_Column_List" >
-      rule_id, rule_name, rule_create_time, use_times
+<mapper namespace="cn.hd.crawler.dao.RuleMapper">
+    <sql id="Base_Column_List">
+      rule_id, rule_name, rule_create_time, use_times, detail_url, detail_data_xpath, detail_url_xpath, detail_url_contain, detail_data_pass
     </sql>
     <select id="queryAll" resultType="cn.hd.crawler.entity.Rule">
-        SELECT <include refid="Base_Column_List" /> FROM tb_rule;
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_rule;
     </select>
     <select id="queryRuleById" parameterType="Integer" resultType="cn.hd.crawler.entity.Rule">
-        SELECT <include refid="Base_Column_List" /> FROM tb_rule WHERE rule_id = #{ruleId};
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_rule WHERE rule_id = #{ruleId};
     </select>
 </mapper>

@@ -11,31 +11,13 @@
 
             <li class="nav-item nav-dropdown">
                 <a href="#" class="nav-link nav-dropdown-toggle">
-                    <i class="icon icon-target"></i> Layouts <i class="fa fa-caret-left"></i>
+                    <i class="icon icon-target"></i> 快速编辑 <i class="fa fa-caret-left"></i>
                 </a>
 
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a href="layouts-normal.html" class="nav-link">
-                            <i class="icon icon-target"></i> Normal
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="layouts-fixed-sidebar.html" class="nav-link">
-                            <i class="icon icon-target"></i> Fixed Sidebar
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="layouts-fixed-header.html" class="nav-link">
-                            <i class="icon icon-target"></i> Fixed Header
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="layouts-hidden-sidebar.html" class="nav-link">
-                            <i class="icon icon-target"></i> Hidden Sidebar
+                <ul class="nav-dropdown-items" id="nav-rules">
+                    <li class="nav-item" v-for="(item,index) in rules">
+                        <a :href="getRuleInfoUrl(item.ruleId)" class="nav-link">
+                            <i class="icon icon-target"></i> {{item.ruleName}}
                         </a>
                     </li>
                 </ul>
@@ -171,3 +153,27 @@
         </ul>
     </nav>
 </div>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/crawler/rule/queryRules',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                var rules = data.data;
+                var tableRules = new Vue({
+                    el: '#nav-rules',
+                    data: {
+                        rules: rules
+                    },
+                    methods : {
+                        getRuleInfoUrl : function (id) {
+                            return "./rules.html?id=" + id;
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
