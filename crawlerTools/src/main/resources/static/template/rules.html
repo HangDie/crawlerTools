@@ -164,17 +164,20 @@
     </div>
 </div>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    sessionStorage.setItem("nav", "rule.html");
+    $('#sidebar').load('./sidebar.html');
+</script>
+<script src="js/common.js"></script>
 <script src="vendor/popper.js/popper.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="vendor/chart.js/chart.min.js"></script>
 <script src="js/carbon.js"></script>
 <script src="js/demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="js/common.js"></script>
 </body>
 <script>
     $('#nav').load('./nav.html');
-    $('#sidebar').load('./sidebar.html');
     // 新增规则还是编辑规则
     var ruleTypeStr = [];
     ruleTypeStr[true] = "规则详情";

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hd.crawler.dao.CrawlerRecordMapper">
+    <sql id="Base_Column_List">
+      record_id, rule_id, start_time, save_table_name
+    </sql>
+    <select id="queryAll" resultType="cn.hd.crawler.entity.CrawlerRecord">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_crwaler_record;
+    </select>
+    <select id="queryRecordById" parameterType="Integer" resultType="cn.hd.crawler.entity.CrawlerRecord">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_crwaler_record WHERE record_id = #{recordId};
+    </select>
+</mapper>

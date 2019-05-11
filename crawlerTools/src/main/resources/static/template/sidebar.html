@@ -4,7 +4,7 @@
             <li class="nav-title">导航栏</li>
 
             <li class="nav-item">
-                <a href="index.html" class="nav-link active">
+                <a href="index.html" class="nav-link" nav="index.html">
                     <i class="icon icon-speedometer"></i> 规则列表
                 </a>
             </li>
@@ -16,90 +16,18 @@
 
                 <ul class="nav-dropdown-items" id="nav-rules">
                     <li class="nav-item" v-for="(item,index) in rules">
-                        <a :href="getRuleInfoUrl(item.ruleId)" class="nav-link">
+                        <a :href="getRuleInfoUrl(item.ruleId)" class="nav-link" nav="rule.html">
                             <i class="icon icon-target"></i> {{item.ruleName}}
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <li class="nav-item nav-dropdown">
-                <a href="#" class="nav-link nav-dropdown-toggle">
-                    <i class="icon icon-energy"></i> UI Kits <i class="fa fa-caret-left"></i>
-                </a>
-
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a href="alerts.html" class="nav-link">
-                            <i class="icon icon-energy"></i> Alerts
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="buttons.html" class="nav-link">
-                            <i class="icon icon-energy"></i> Buttons
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="cards.html" class="nav-link">
-                            <i class="icon icon-energy"></i> Cards
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="modals.html" class="nav-link">
-                            <i class="icon icon-energy"></i> Modals
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="tabs.html" class="nav-link">
-                            <i class="icon icon-energy"></i> Tabs
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="progress-bars.html" class="nav-link">
-                            <i class="icon icon-energy"></i> Progress Bars
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="widgets.html" class="nav-link">
-                            <i class="icon icon-energy"></i> Widgets
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item nav-dropdown">
-                <a href="#" class="nav-link nav-dropdown-toggle">
-                    <i class="icon icon-graph"></i> Charts <i class="fa fa-caret-left"></i>
-                </a>
-
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a href="chartjs.html" class="nav-link">
-                            <i class="icon icon-graph"></i> Chart.js
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
             <li class="nav-item">
-                <a href="forms.html" class="nav-link">
-                    <i class="icon icon-puzzle"></i> Forms
+                <a href="crawler.html" class="nav-link" nav="crawler.html">
+                    <i class="icon icon-puzzle"></i> 爬虫记录
                 </a>
             </li>
-
-            <li class="nav-item">
-                <a href="tables.html" class="nav-link">
-                    <i class="icon icon-grid"></i> Tables
-                </a>
-            </li>
-
-            <li class="nav-title">More</li>
 
             <li class="nav-item nav-dropdown">
                 <a href="#" class="nav-link nav-dropdown-toggle">
@@ -154,7 +82,13 @@
     </nav>
 </div>
 <script>
+
     $(document).ready(function () {
+        $('.nav-link').each(function (idx, item) {
+            if($(item).attr('nav') == sessionStorage.getItem("nav")) {
+                $(item).addClass('active');
+            }
+        });
         $.ajax({
             type: 'POST',
             url: '/crawler/rule/queryRules',

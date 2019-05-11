@@ -54,7 +54,9 @@ public class MyProcessor implements PageProcessor {
         // 新建爬虫配置
         CrawlerConfig crawlerConfig = CrawlerConfig.me().setUrl("https://blog.csdn.net/CSDNedu/article/details/88842461")
                 .addUrlXpath("(https://blog.csdn.net/[\\w\\-]+/[\\w\\-]+/[\\w\\-]+/[\\w\\-]+)")
-                .addXpath("title", "//h1[@class='title-article']/text()");
+                .addXpath("标题", "//h1[@class='title-article']/text()")
+                .addXpath("阅读数", "//span[@class='read-count']/text()")
+                .addXpath("时间", "//span[@class='time']/text()");
 
         // 新建爬虫
         Spider spider = Spider.create(new MyProcessor(crawlerConfig))
