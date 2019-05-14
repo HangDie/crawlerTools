@@ -32,7 +32,6 @@
                                             <th>序号</th>
                                             <th>爬虫使用规则</th>
                                             <th>开始时间</th>
-                                            <th>保存数据表名</th>
                                             <th>查看数据集</th>
                                         </tr>
                                         </thead>
@@ -41,11 +40,14 @@
                                             <td>{{index + 1}}</td>
                                             <td><a :href="getRuleInfoUrl(item.ruleId)" target="_blank">{{item.rule.ruleName}}</a></td>
                                             <td>{{item.startTime}}</td>
-                                            <td>{{item.saveTableName}}</td>
-                                            <td><a :href="getRecordData(item.recordId)">查看数据</a></td>
+                                            <td><a :href="getRecordData(item.saveTableName, item.ruleId)">查看数据</a></td>
                                         </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="row col-2">
+                                    <select class="form-control" id="select-rule"><option value="0">选择规则</option></select>
+                                    <button class="btn btn-primary" onclick="crawlerData()">爬取数据</button>
                                 </div>
                             </div>
                         </div>
@@ -66,6 +68,7 @@
 <script src="js/carbon.js"></script>
 <script src="js/demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="js/common.js"></script>
 </body>
 <script>
     // user info
@@ -76,7 +79,34 @@
     sessionStorage.setItem("user", JSON.stringify(user));
     $('#nav').load('./nav.html');
 
+    function crawlerData(){
+        var data = {};
+        var ruleId = $('#select-rule').val();
+        console.info(ruleId);
+        if(ruleId == 0) {
+            return;
+        }
+        data.ruleId = ruleId;
+        ajaxPOST('/crawler/rule/go', data, function () {
+            alert('爬虫已启动');
+            window.location.reload();
+        });
+    }
+
     $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/crawler/rule/queryRules',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                var rules = data.data;
+                $(rules).each(function (idx, item) {
+                    $('#select-rule').append('<option value="'+ item.ruleId +'">'+item.ruleName+'</option>')
+                })
+            }
+        });
+
         $.ajax({
             type: 'POST',
             url: '/crawler/crawlerRecord/queryAll',
@@ -93,8 +123,8 @@
                         getRuleInfoUrl : function (id) {
                             return "./rules.html?id=" + id;
                         },
-                        getRecordData : function(id) {
-                            return "./data.html?id=" + id;
+                        getRecordData : function(saveName, id) {
+                            return "./data.html?saveName=" + saveName + "&id=" + id;
                         }
                     }
                 });

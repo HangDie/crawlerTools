@@ -1,17 +1,153 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.hd.crawler.dao.RuleMapper">
-    <sql id="Base_Column_List">
-      rule_id, rule_name, rule_create_time, use_times, detail_url, detail_data_xpath, detail_url_xpath, detail_url_contain, detail_data_pass
-    </sql>
-    <select id="queryAll" resultType="cn.hd.crawler.entity.Rule">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM tb_rule;
-    </select>
-    <select id="queryRuleById" parameterType="Integer" resultType="cn.hd.crawler.entity.Rule">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM tb_rule WHERE rule_id = #{ruleId};
-    </select>
+<mapper namespace="cn.hd.crawler.dao.RuleMapper" >
+  <resultMap id="BaseResultMap" type="cn.hd.crawler.entity.Rule" >
+    <id column="rule_id" property="ruleId" jdbcType="INTEGER" />
+    <result column="rule_name" property="ruleName" jdbcType="VARCHAR" />
+    <result column="rule_create_time" property="ruleCreateTime" jdbcType="TIMESTAMP" />
+    <result column="use_times" property="useTimes" jdbcType="INTEGER" />
+    <result column="detail_url" property="detailUrl" jdbcType="VARCHAR" />
+    <result column="detail_data_xpath" property="detailDataXpath" jdbcType="VARCHAR" />
+    <result column="detail_url_xpath" property="detailUrlXpath" jdbcType="VARCHAR" />
+    <result column="detail_url_contain" property="detailUrlContain" jdbcType="VARCHAR" />
+    <result column="detail_data_pass" property="detailDataPass" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    rule_id, rule_name, rule_create_time, use_times, detail_url, detail_data_xpath, detail_url_xpath, 
+    detail_url_contain, detail_data_pass
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_rule
+    where rule_id = #{ruleId,jdbcType=INTEGER}
+  </select>
+  <select id="queryAll" resultType="cn.hd.crawler.entity.Rule">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM tb_rule;
+  </select>
+  <select id="queryRuleById" parameterType="Integer" resultType="cn.hd.crawler.entity.Rule">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM tb_rule WHERE rule_id = #{ruleId};
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_rule
+    where rule_id = #{ruleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.hd.crawler.entity.Rule" >
+    insert into tb_rule (rule_id, rule_name, rule_create_time, 
+      use_times, detail_url, detail_data_xpath, 
+      detail_url_xpath, detail_url_contain, detail_data_pass
+      )
+    values (#{ruleId,jdbcType=INTEGER}, #{ruleName,jdbcType=VARCHAR}, #{ruleCreateTime,jdbcType=TIMESTAMP}, 
+      #{useTimes,jdbcType=INTEGER}, #{detailUrl,jdbcType=VARCHAR}, #{detailDataXpath,jdbcType=VARCHAR}, 
+      #{detailUrlXpath,jdbcType=VARCHAR}, #{detailUrlContain,jdbcType=VARCHAR}, #{detailDataPass,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.hd.crawler.entity.Rule" >
+    insert into tb_rule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ruleId != null" >
+        rule_id,
+      </if>
+      <if test="ruleName != null" >
+        rule_name,
+      </if>
+      <if test="ruleCreateTime != null" >
+        rule_create_time,
+      </if>
+      <if test="useTimes != null" >
+        use_times,
+      </if>
+      <if test="detailUrl != null" >
+        detail_url,
+      </if>
+      <if test="detailDataXpath != null" >
+        detail_data_xpath,
+      </if>
+      <if test="detailUrlXpath != null" >
+        detail_url_xpath,
+      </if>
+      <if test="detailUrlContain != null" >
+        detail_url_contain,
+      </if>
+      <if test="detailDataPass != null" >
+        detail_data_pass,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ruleId != null" >
+        #{ruleId,jdbcType=INTEGER},
+      </if>
+      <if test="ruleName != null" >
+        #{ruleName,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleCreateTime != null" >
+        #{ruleCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="useTimes != null" >
+        #{useTimes,jdbcType=INTEGER},
+      </if>
+      <if test="detailUrl != null" >
+        #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="detailDataXpath != null" >
+        #{detailDataXpath,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrlXpath != null" >
+        #{detailUrlXpath,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrlContain != null" >
+        #{detailUrlContain,jdbcType=VARCHAR},
+      </if>
+      <if test="detailDataPass != null" >
+        #{detailDataPass,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.hd.crawler.entity.Rule" >
+    update tb_rule
+    <set >
+      <if test="ruleName != null" >
+        rule_name = #{ruleName,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleCreateTime != null" >
+        rule_create_time = #{ruleCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="useTimes != null" >
+        use_times = #{useTimes,jdbcType=INTEGER},
+      </if>
+      <if test="detailUrl != null" >
+        detail_url = #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="detailDataXpath != null" >
+        detail_data_xpath = #{detailDataXpath,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrlXpath != null" >
+        detail_url_xpath = #{detailUrlXpath,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrlContain != null" >
+        detail_url_contain = #{detailUrlContain,jdbcType=VARCHAR},
+      </if>
+      <if test="detailDataPass != null" >
+        detail_data_pass = #{detailDataPass,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rule_id = #{ruleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.hd.crawler.entity.Rule" >
+    update tb_rule
+    set rule_name = #{ruleName,jdbcType=VARCHAR},
+      rule_create_time = #{ruleCreateTime,jdbcType=TIMESTAMP},
+      use_times = #{useTimes,jdbcType=INTEGER},
+      detail_url = #{detailUrl,jdbcType=VARCHAR},
+      detail_data_xpath = #{detailDataXpath,jdbcType=VARCHAR},
+      detail_url_xpath = #{detailUrlXpath,jdbcType=VARCHAR},
+      detail_url_contain = #{detailUrlContain,jdbcType=VARCHAR},
+      detail_data_pass = #{detailDataPass,jdbcType=VARCHAR}
+    where rule_id = #{ruleId,jdbcType=INTEGER}
+  </update>
 </mapper>

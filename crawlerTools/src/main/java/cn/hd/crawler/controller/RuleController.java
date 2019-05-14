@@ -1,6 +1,9 @@
 package cn.hd.crawler.controller;
 
+import cn.hd.crawler.entity.Rule;
+import cn.hd.crawler.service.CrawlerRecordServiceImpl;
 import cn.hd.crawler.service.RuleServiceImpl;
+import cn.hd.crawler.utils.ObjectMapperUtil;
 import cn.hd.crawler.utils.ServerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,8 @@ public class RuleController {
 
     @Autowired
     private RuleServiceImpl ruleService;
+    @Autowired
+    private CrawlerRecordServiceImpl crawlerRecordService;
 
     @RequestMapping("/queryRules")
     @ResponseBody
@@ -36,4 +41,46 @@ public class RuleController {
         return ServerResponse.createBySuccess(ruleService.queryRuleById(ruleId));
     }
 
+    @RequestMapping("/save")
+    @ResponseBody
+    public ServerResponse save(@RequestBody Map<String, Object> params){
+        Rule rule = new Rule();
+        try {
+            if(params.get("ruleId") != null) {
+                rule.setRuleId(Integer.parseInt(params.get("ruleId").toString()));
+            }
+            rule.setRuleName(params.get("ruleName").toString());
+            rule.setDetailUrl(params.get("detailUrl").toString());
+            rule.setDetailDataXpath(params.get("detailDataXpath").toString());
+            rule.setDetailUrlXpath(params.get("detailUrlXpath").toString());
+            rule.setDetailUrlContain(params.get("detailUrlContains").toString());
+            if(rule.getRuleId() == null){
+                ruleService.add(rule);
+                return ServerResponse.createBySuccess("Success");
+            }
+            else{
+                ruleService.update(rule);
+                return ServerResponse.createBySuccess("Success");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ServerResponse.createByFailure("Error");
+        }
+    }
+
+    @RequestMapping("/go")
+    @ResponseBody
+    public ServerResponse go(@RequestBody Map<String, Object> params){
+        Integer ruleId = 0;
+        try {
+            if(params.get("ruleId") != null) {
+                ruleId = Integer.parseInt(params.get("ruleId").toString());
+                crawlerRecordService.goCrawler(ruleId);
+            }
+            return ServerResponse.createBySuccess();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ServerResponse.createByFailure("Error");
+        }
+    }
 }

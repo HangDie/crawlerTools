@@ -4,13 +4,21 @@ import java.util.Date;
 
 public class Rule {
     private Integer ruleId;
+
     private String ruleName;
+
     private Date ruleCreateTime;
+
     private Integer useTimes;
+
     private String detailUrl;
+
     private String detailDataXpath;
+
     private String detailUrlXpath;
+
     private String detailUrlContain;
+
     private String detailDataPass;
 
     public Integer getRuleId() {

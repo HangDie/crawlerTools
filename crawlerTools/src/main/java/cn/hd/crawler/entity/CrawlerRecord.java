@@ -3,11 +3,14 @@ package cn.hd.crawler.entity;
 import java.util.Date;
 
 public class CrawlerRecord {
-
     private Integer recordId;
+
     private Integer ruleId;
+
     private Date startTime;
+
     private String saveTableName;
+
     private Rule rule;
 
     public Integer getRecordId() {
