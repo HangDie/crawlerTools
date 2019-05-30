@@ -1,5 +1,6 @@
 package cn.hd.crawler.controller;
 
+import cn.hd.crawler.entity.CrawlerRecord;
 import cn.hd.crawler.entity.Rule;
 import cn.hd.crawler.service.CrawlerRecordServiceImpl;
 import cn.hd.crawler.service.RuleServiceImpl;
@@ -34,6 +35,22 @@ public class RuleController {
         Integer ruleId;
         try {
             ruleId = (Integer) params.get("ruleId");
+        } catch (Exception e) {
+            ruleId = 1;
+            e.printStackTrace();
+        }
+        return ServerResponse.createBySuccess(ruleService.queryRuleById(ruleId));
+    }
+
+    @RequestMapping("/queryRecordById")
+    @ResponseBody
+    public ServerResponse queryRecordById(@RequestBody Map<String, Object> params) {
+        Integer recordId;
+        Integer ruleId;
+        try {
+            recordId = (Integer) params.get("recordId");
+            CrawlerRecord crawlerRecord = crawlerRecordService.queryByRecordId(recordId);
+            ruleId = crawlerRecord.getRuleId();
         } catch (Exception e) {
             ruleId = 1;
             e.printStackTrace();

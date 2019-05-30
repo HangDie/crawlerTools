@@ -23,7 +23,7 @@
 
         <javaClientGenerator targetPackage="cn.hd.crawler.dao" targetProject="src/main/java" type="XMLMAPPER" />
 
-        <table tableName="tb_result" domainObjectName="Result"
+        <table tableName="tb_views_data" domainObjectName="ViewsData"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

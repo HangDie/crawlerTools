@@ -35,7 +35,7 @@ public class CrawlerRecordServiceImpl {
         return records;
     }
 
-    public CrawlerRecord queryByRecordId(Integer recordId) { return crawlerRecordDao.queryRuleById(recordId); }
+    public CrawlerRecord queryByRecordId(Integer recordId) { return crawlerRecordDao.selectByPrimaryKey(recordId); }
 
     public void goCrawler(Integer ruleId) {
         Rule rule = ruleDao.selectByPrimaryKey(ruleId);

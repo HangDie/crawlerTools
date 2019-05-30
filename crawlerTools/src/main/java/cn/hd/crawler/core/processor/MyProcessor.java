@@ -6,6 +6,7 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
+import java.util.List;
 import java.util.Map;
 
 public class MyProcessor implements PageProcessor {
@@ -37,8 +38,11 @@ public class MyProcessor implements PageProcessor {
         }
         // 从页面发现后续的url地址来抓取
         for (String xpath : crawlerConfig.getUrlsXpaths()) {
-            page.addTargetRequests(page.getHtml().links().regex(xpath).all());
+            System.out.println(page.getHtml().xpath(xpath));
+            page.addTargetRequests(page.getHtml().xpath(xpath).links().all());
         }
+
+        System.out.println(page.getUrl().toString());
     }
 
     @Override
@@ -51,30 +55,23 @@ public class MyProcessor implements PageProcessor {
         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
     }
 
-//    public static void main(String[] args) {
-//
-//        // 新建爬虫配置
-//        CrawlerConfig crawlerConfig = CrawlerConfig.me().setUrl("https://blog.csdn.net/CSDNedu/article/details/88842461")
-//                .addUrlXpath("(https://blog.csdn.net/[\\w\\-]+/[\\w\\-]+/[\\w\\-]+/[\\w\\-]+)")
-//                .addUrlXpath("(https://blog.csdn.net/[\\w\\-]+/[\\w\\-]+/[\\w\\-]+/[\\w\\-]+)")
-//                .addXpath("标题", "//h1[@class='title-article']/text()")
-//                .addXpath("阅读数", "//span[@class='read-count']/text()")
-//                .addXpath("时间", "//span[@class='time']/text()");
-//
-//        // 新建爬虫
-//        Spider spider = Spider.create(new MyProcessor(crawlerConfig))
-//                //从"https://github.com/code4craft"开始抓
-//                .addUrl("https://blog.csdn.net/CSDNedu/article/details/88842461")
-//        //开启5个线程抓取
-//                .thread(5);
-//
-//        // 启动爬虫
-//        spider.start();
-//        try {
-//            Thread.sleep(100000);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(spider.isExitWhenComplete());
-//    }
+    public static void main(String[] args) {
+
+        // 新建爬虫配置
+        CrawlerConfig crawlerConfig = CrawlerConfig.me().setUrl("http://rsc.jmu.edu.cn/")
+                .addUrlXpath("//a[@class='newsTi']")
+                .addUrlContain("([\\w\\W]*)")
+                .addXpath("标题", "//div[@id='main']/h1/html()")
+                .addXpath("全文内容", "//div[@id='main']/html()");
+
+        // 新建爬虫
+        Spider spider = Spider.create(new MyProcessor(crawlerConfig))
+                .addUrl("http://rsc.jmu.edu.cn/")
+        //开启5个线程抓取
+                .thread(5);
+
+        // 启动爬虫
+        spider.start();
+
+    }
 }

@@ -1,7 +1,7 @@
 package cn.hd.crawler.core.pipeline;
 
 import cn.hd.crawler.dao.ResultMapper;
-import cn.hd.crawler.entity.Result;
+import cn.hd.crawler.entity.Results;
 import com.alibaba.fastjson.JSONObject;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
@@ -24,7 +24,7 @@ public class MyPipeline extends ConsolePipeline {
             System.out.println(entry.getKey() + ":\t" + entry.getValue());
             jo.put(entry.getKey(), entry.getValue());
         }
-        Result result = new Result();
+        Results result = new Results();
         result.setSaveName(id);
         result.setResultValue(jo.toString());
         result.setUrl(resultItems.get("url"));

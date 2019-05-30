@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>爬虫工具系统</title>
+    <link rel="stylesheet" href="vendor/simple-line-icons/css/simple-line-icons.css">
+    <link rel="stylesheet" href="vendor/font-awesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="sidebar-fixed header-fixed">
+<div class="page-wrapper">
+    <div id="nav"></div>
+    <div class="main-container">
+        <div id="sidebar"></div>
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-light" id="rule-type">
+                            结果集分类检索
+                        </div>
+
+                        <div class="card-body">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="select-record" class="form-control-label">爬虫记录</label>
+                                            <select id="select-record" class="form-control">
+                                                <option>请选择记录</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <td>字段名</td>
+                                                <td>关键字筛选</td>
+                                            </thead>
+                                            <tbody id="table-regex">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!--<div class="row">-->
+                                    <!--<div class="col-md-4">-->
+                                        <!--<div class="form-group">-->
+                                            <!--<label for="input-search" class="form-control-label">关键字搜索</label>-->
+                                            <!--<input id="input-search" class="form-control" placeholder="请输入关键字" />-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="input-view" class="form-control-label">生成视图名</label>
+                                            <input id="input-view" class="form-control" placeholder="请输入生成的视图名" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <button class="btn btn-lg btn-primary" id="btn-create" style="margin: 0 auto;">生成视图</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    sessionStorage.setItem("nav", "search.html");
+    $('#sidebar').load('./sidebar.html');
+</script>
+<script src="js/common.js"></script>
+<script src="vendor/popper.js/popper.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="vendor/chart.js/chart.min.js"></script>
+<script src="js/carbon.js"></script>
+<script src="js/demo.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+</body>
+<script>
+    var recordId = 0;
+    $('#nav').load('./nav.html');
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/crawler/crawlerRecord/queryAll',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                var records = data.data;
+                $(records).each(function (idx, item) {
+                    $('#select-record').append('<option value="'+item.ruleId+'-'+item.recordId+'">'+item.rule.ruleName + ' - ' + item.startTime+'</option>');
+                });
+            }
+        });
+    });
+
+    $('#select-record').change(function () {
+        var options = $('#select-record').val();
+        options = options.substring(0, options.lastIndexOf('-')) * 1;
+        console.info(options)
+        $.ajax({
+            type: 'POST',
+            url: '/crawler/rule/queryRuleById',
+            data: JSON.stringify({
+                ruleId: options
+            }),
+            contentType: 'application/json;charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                $('#table-regex').empty();
+                var dataObj = JSON.parse(data.data.detailDataXpath);
+                for(var i in dataObj) {
+                    $('#table-regex').append('<tr class="params-tr"><td class="param-name">'+dataObj[i].key+'</td><td><input type="text" class="form-control param-search" placeholder="请输入筛选的关键字"></td></tr>')
+                }
+            }
+        });
+
+    });
+
+    // 获取分字段筛选数据
+    $('#btn-create').on('click', function () {
+        var data = {};
+        var searchParams = {};
+        $('.params-tr').each(function(idx, item) {
+            searchParams[$(item).find('.param-name').text()] = $(item).find('.param-search').val();
+        });
+        var op = $('#select-record').val();
+        data.recordId = op.substring(op.lastIndexOf('-') + 1, op.length) * 1;
+        data.searchParams = JSON.stringify(searchParams);
+        data.search = $('#input-search').val();
+        data.view = $('#input-view').val();
+        data.ruleId =  op.substring(0, op.lastIndexOf('-')) * 1;
+        console.info(data);
+        ajaxPOST('/crawler/view/save', data, function (data) {
+            console.info(data);
+            // window.location.href = "/crawler/template/index.html";
+        });
+    });
+</script>
+</html>

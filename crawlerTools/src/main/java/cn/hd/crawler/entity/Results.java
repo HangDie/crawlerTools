@@ -1,6 +1,6 @@
 package cn.hd.crawler.entity;
 
-public class Result {
+public class Results {
     private Integer id;
 
     private String resultValue;

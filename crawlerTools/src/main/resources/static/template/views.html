@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>爬虫工具系统</title>
+    <link rel="stylesheet" href="vendor/simple-line-icons/css/simple-line-icons.css">
+    <link rel="stylesheet" href="vendor/font-awesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="sidebar-fixed header-fixed">
+<div class="page-wrapper">
+    <div id="nav"></div>
+    <div class="main-container">
+        <div id="sidebar"></div>
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            爬虫记录列表
+                        </div>
+                        <div class="card-body">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>视图名</th>
+                                            <th>生成时间</th>
+                                            <th>查看数据</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table-records">
+                                        <tr v-for="(item,index) in views">
+                                            <td>{{index + 1}}</td>
+                                            <td>{{item.viewName}}</td>
+                                            <td>{{item.createTime}}</td>
+                                            <td><a :href="getRecordData(item.viewId, item.recordId)" target="_blank">查看</a></td>
+                                        </tr>
+                                        </tbody>
+
+                                        <!--<tbody id="table-records">-->
+                                        <!--<tr v-for="(item,index) in records">-->
+                                            <!--<td>{{index + 1}}</td>-->
+                                            <!--<td><a :href="getRuleInfoUrl(item.ruleId)" target="_blank">{{item.rule.ruleName}}</a></td>-->
+                                            <!--<td>{{item.startTime}}</td>-->
+                                            <!--<td><a :href="getRecordData(item.saveTableName, item.ruleId)">查看数据</a></td>-->
+                                        <!--</tr>-->
+                                        <!--</tbody>-->
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="vendor/jquery/jquery.min.js"></script>
+<script>
+    sessionStorage.setItem("nav", "views.html");
+    $('#sidebar').load('./sidebar.html');
+</script>
+<script src="vendor/popper.js/popper.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="vendor/chart.js/chart.min.js"></script>
+<script src="js/carbon.js"></script>
+<script src="js/demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="js/common.js"></script>
+</body>
+<script>
+    $('#nav').load('./nav.html');
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/crawler/view/queryViews',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                var views = data.data;
+                var tableRules = new Vue({
+                    el: '#table-records',
+                    data: {
+                        views: views
+                    },
+                    methods : {
+                        getRecordData : function(id, recordId) {
+                            return "./viewData.html?recordId=" + recordId + "&viewId=" + id;
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+</html>

@@ -1,6 +1,6 @@
 package cn.hd.crawler.dao;
 
-import cn.hd.crawler.entity.Result;
+import cn.hd.crawler.entity.Results;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -11,15 +11,17 @@ import java.util.List;
 public interface ResultMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(Result record);
+    int insert(Results record);
 
-    int insertSelective(Result record);
+    int insertSelective(Results record);
 
-    Result selectByPrimaryKey(Integer id);
+    Results selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Result record);
+    int updateByPrimaryKeySelective(Results record);
 
-    int updateByPrimaryKey(Result record);
+    int updateByPrimaryKey(Results record);
 
-    List<Result> selectBySaveName(String saveName);
+    List<Results> selectBySaveName(String saveName);
+
+    List<Results> selectByViewId(Integer viewId);
 }

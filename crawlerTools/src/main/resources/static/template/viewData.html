@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>爬虫工具系统</title>
+    <link rel="stylesheet" href="vendor/simple-line-icons/css/simple-line-icons.css">
+    <link rel="stylesheet" href="vendor/font-awesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="sidebar-fixed header-fixed">
+<div class="page-wrapper">
+    <div id="nav"></div>
+    <div class="main-container">
+        <div id="sidebar"></div>
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            数据记录
+                        </div>
+                        <div class="card-body">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="table-data">
+                                        <tbody id="table-records">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="vendor/jquery/jquery.min.js"></script>
+<script>
+    sessionStorage.setItem("nav", "views.html");
+    $('#sidebar').load('./sidebar.html');
+</script>
+<script src="vendor/popper.js/popper.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="vendor/chart.js/chart.min.js"></script>
+<script src="js/carbon.js"></script>
+<script src="js/demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="js/common.js"></script>
+</body>
+<script>
+    var keys = [];
+    $(document).ready(function () {
+        var recordId = getQueryString('recordId');
+        $.ajax({
+            type: 'POST',
+            url: '/crawler/rule/queryRecordById',
+            data: JSON.stringify({
+                recordId: recordId * 1
+            }),
+            contentType: 'application/json;charset=utf-8',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                var obj = data.data;
+                // 获取的网址数据规则
+                var dataXpath = JSON.parse(obj.detailDataXpath);
+                var theadStr = '<thead><tr><td>序号</td>';
+                $(dataXpath).each(function (idx, item) {
+                    theadStr += '<td>'+item.key+'</td>';
+                    keys.push(item.key);
+                });
+                theadStr += '</tr></thead>';
+                $('#table-data').append(theadStr);
+            }
+        });
+        var num = 1;
+        $.ajax({
+            type: 'POST',
+            url: '/crawler/view/queryData',
+            data : 'viewId=' + getQueryString('viewId'),
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                var list = data.data;
+                $(list).each(function (idx, item) {
+                    var result = JSON.parse(item.resultValue);
+                    var appendStr = '<tr><td>'+num+'</td>';
+                    for(var s in keys) {
+                        appendStr += '<td>'+result[keys[s]]+'</td>';
+                    }
+                    appendStr += "</tr>";
+                    $('#table-records').append(appendStr);
+                    num++;
+                });
+            }
+        });
+    });
+
+</script>
+</html>
